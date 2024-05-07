@@ -3,13 +3,16 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { BookShelvesEnum } from '../types/book.enum';
+import { FindOneOptions } from 'typeorm';
+import { Book } from './book.entity';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('book')
 export class BookController {
@@ -20,8 +23,8 @@ export class BookController {
     return this.bookService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get()
+  findOne(@Body('id') id: FindOneOptions<Book>) {
     return this.bookService.findOne(id);
   }
 
@@ -30,18 +33,21 @@ export class BookController {
     return this.bookService.create(createBookDto);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() createBookDto: CreateBookDto) {
-    return this.bookService.update(id, createBookDto);
+  @Put()
+  update(@Body('id') id: string, updateBookDto: UpdateBookDto) {
+    return this.bookService.update(id, updateBookDto);
   }
 
-  @Patch(':id')
-  updateShelf(@Param('id') id: string, @Body() createBookDto: CreateBookDto) {
-    return this.bookService.updateShelf(id, createBookDto);
+  @Patch()
+  updateShelf(
+    @Body() body: { id: FindOneOptions<Book>; bookShelf: BookShelvesEnum },
+  ) {
+    const { id, bookShelf } = body;
+    return this.bookService.updateShelf(id, bookShelf);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: string) {
+  @Delete()
+  delete(@Body('id') id: string) {
     return this.bookService.remove(id);
   }
 }

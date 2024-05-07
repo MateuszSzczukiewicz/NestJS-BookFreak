@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
+import { BookShelvesEnum } from '../types/book.enum';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
@@ -15,7 +17,7 @@ export class BookService {
     return this.bookRepository.save(createBookDto);
   }
 
-  async findOne(id: number): Promise<Book> {
+  async findOne(id: FindOneOptions<Book>) {
     return this.bookRepository.findOne(id);
   }
 
@@ -23,21 +25,25 @@ export class BookService {
     return this.bookRepository.find();
   }
 
-  async update(bookId: string, createBookDto: CreateBookDto): Promise<Book> {
-    const bookToUpdate = await this.bookRepository.findOne(bookId);
-    if (!bookToUpdate) {
-      return null;
-    }
+  async update(
+    id: string,
+    updateBookDto: UpdateBookDto,
+  ): Promise<UpdateResult> {
+    return this.bookRepository.update(id, updateBookDto);
+  }
 
-    bookToUpdate.title = createBookDto.title;
-    bookToUpdate.author = createBookDto.author;
-    bookToUpdate.bookImage = createBookDto.bookImage;
-    bookToUpdate.bookShelf = createBookDto.bookShelf;
+  async updateShelf(
+    id: FindOneOptions<Book>,
+    bookShelf: BookShelvesEnum,
+  ): Promise<Book> {
+    const bookToUpdate = await this.bookRepository.findOne(id);
+
+    bookToUpdate.bookShelf = bookShelf;
 
     return this.bookRepository.save(bookToUpdate);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.bookRepository.delete(id);
   }
 }
