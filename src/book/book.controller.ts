@@ -3,51 +3,54 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
-import { BookShelvesEnum } from '../types/book.enum';
-import { FindOneOptions } from 'typeorm';
-import { Book } from './book.entity';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './book.entity';
+import { FindOneOptions } from 'typeorm';
 
-@Controller('book')
+@Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  findAll() {
+  findAll(): Promise<Book[]> {
     return this.bookService.findAll();
   }
 
-  @Get()
-  findOne(@Body('id') id: FindOneOptions<Book>) {
+  @Get(':id')
+  findOne(@Param('id') id: FindOneOptions<Book>): Promise<Book> {
     return this.bookService.findOne(id);
   }
 
   @Post()
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.bookService.create(createBookDto);
+  createOne(@Body() book: CreateBookDto): Promise<Book> {
+    return this.bookService.createOne(book);
   }
 
-  @Put()
-  update(@Body('id') id: string, updateBookDto: UpdateBookDto) {
-    return this.bookService.update(id, updateBookDto);
+  @Put(':id')
+  updateOne(
+    @Param('id') id: FindOneOptions<Book>,
+    @Body() book: UpdateBookDto,
+  ): Promise<Book> {
+    return this.bookService.update(id, book);
   }
 
-  @Patch()
+  @Patch(':id')
   updateShelf(
-    @Body() body: { id: FindOneOptions<Book>; bookShelf: BookShelvesEnum },
-  ) {
-    const { id, bookShelf } = body;
-    return this.bookService.updateShelf(id, bookShelf);
+    @Param('id') id: FindOneOptions<Book>,
+    @Body() book: UpdateBookDto,
+  ): Promise<Book> {
+    return this.bookService.updateShelf(id, book);
   }
 
-  @Delete()
-  delete(@Body('id') id: string) {
-    return this.bookService.remove(id);
+  @Delete(':id')
+  deleteOne(@Param('id') id: FindOneOptions<Book>): Promise<void> {
+    return this.bookService.delete(id);
   }
 }

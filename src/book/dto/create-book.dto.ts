@@ -1,20 +1,4 @@
-import { BookShelvesEnum } from '../../types/book.enum';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { OmitType } from '@nestjs/mapped-types';
+import { UpdateBookDto } from './update-book.dto';
 
-export class CreateBookDto {
-  @IsString()
-  id: string;
-
-  @IsString()
-  title: string;
-
-  @IsString()
-  author: string;
-
-  @IsString()
-  @IsOptional()
-  bookImage: string | ArrayBuffer | null;
-
-  @IsEnum(BookShelvesEnum)
-  bookShelf: BookShelvesEnum;
-}
+export class CreateBookDto extends OmitType(UpdateBookDto, ['id'] as const) {}
