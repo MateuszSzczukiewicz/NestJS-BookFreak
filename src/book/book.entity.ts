@@ -25,6 +25,8 @@ export class Book extends BaseEntity {
   @Column({ type: 'enum', enum: BookShelvesEnum })
   bookShelf: BookShelvesEnum;
 
-  @ManyToOne(() => User, (user) => user.books)
+  @ManyToOne(() => User, (user: User) => user.books, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }

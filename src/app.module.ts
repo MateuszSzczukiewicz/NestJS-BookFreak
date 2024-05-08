@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { BookModule } from './book/book.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { databaseConfig } from './config/database.config';
+import { envValidation } from './config/envValidation.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({}),
-    ConfigModule.forRoot({ isGlobal: true }),
-    DatabaseModule,
+    TypeOrmModule.forRootAsync(databaseConfig),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [`.env.${process.env.NODE_ENV}`],
+      validationSchema: envValidation,
+    }),
     BookModule,
     UserModule,
   ],

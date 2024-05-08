@@ -1,4 +1,4 @@
-import { BookShelvesEnum } from '../../types/book.enum';
+import { BookShelvesEnum } from '../enums/book.enum';
 
 export interface IBook {
   id: string;

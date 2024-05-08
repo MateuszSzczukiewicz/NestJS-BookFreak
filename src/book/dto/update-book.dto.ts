@@ -1,5 +1,5 @@
-import { BookShelvesEnum } from '../../types/book.enum';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { BookShelvesEnum } from '../enums/book.enum';
 
 export class UpdateBookDto {
   @IsNumber()

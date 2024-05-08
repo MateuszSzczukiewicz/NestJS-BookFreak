@@ -21,6 +21,6 @@ export class User extends BaseEntity {
   @Length(4, 100)
   password: string;
 
-  @OneToMany(() => Book, (book) => book.user)
+  @OneToMany(() => Book, (book: Book) => book.user)
   books: Book[];
 }

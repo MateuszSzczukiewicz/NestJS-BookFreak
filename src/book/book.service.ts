@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -17,7 +17,7 @@ export class BookService {
   }
 
   async findOne(id: FindOneOptions<Book>): Promise<Book> {
-    const book = await this.bookRepository.findOne(id);
+    const book: Book = await this.bookRepository.findOne(id);
     if (!book) {
       throw new NotFoundException('Book not found');
     }
@@ -26,7 +26,7 @@ export class BookService {
   }
 
   async findAll(): Promise<Book[]> {
-    const books = await this.bookRepository.find();
+    const books: Book[] = await this.bookRepository.find();
     if (!books.length) {
       throw new NotFoundException('Books not found');
     }
@@ -34,35 +34,26 @@ export class BookService {
     return books;
   }
 
-  async update(id: FindOneOptions<Book>, book: UpdateBookDto): Promise<Book> {
-    const bookToUpdate = await this.findOne(id);
-    if (!bookToUpdate) {
-      throw new NotFoundException('Book not found');
-    }
-    Object.assign(bookToUpdate, book);
-
-    return this.bookRepository.save(bookToUpdate);
+  async update(
+    id: FindOneOptions<Book>,
+    book: UpdateBookDto,
+  ): Promise<UpdateResult> {
+    await this.findOne(id);
+    return this.bookRepository.update(id, book);
   }
 
   async updateShelf(
     id: FindOneOptions<Book>,
     book: UpdateBookDto,
-  ): Promise<Book> {
-    const bookToUpdate = await this.findOne(id);
-    if (!bookToUpdate) {
-      throw new NotFoundException('Book not found');
-    }
+  ): Promise<UpdateResult> {
+    const bookToUpdate: Book = await this.findOne(id);
     bookToUpdate.bookShelf = book.bookShelf;
 
-    return this.bookRepository.save(bookToUpdate);
+    return this.bookRepository.update(id, bookToUpdate);
   }
 
   async delete(id: FindOneOptions<Book>): Promise<Book> {
-    const bookToDelete = await this.findOne(id);
-    if (!bookToDelete) {
-      throw new NotFoundException('Book not found');
-    }
-
-    return bookToDelete.remove();
+    const bookToDelete: Book = await this.findOne(id);
+    return this.bookRepository.remove(bookToDelete);
   }
 }

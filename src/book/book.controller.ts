@@ -12,7 +12,7 @@ import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './book.entity';
-import { FindOneOptions } from 'typeorm';
+import { FindOneOptions, UpdateResult } from 'typeorm';
 
 @Controller('books')
 export class BookController {
@@ -37,7 +37,7 @@ export class BookController {
   updateOne(
     @Param('id') id: FindOneOptions<Book>,
     @Body() book: UpdateBookDto,
-  ): Promise<Book> {
+  ): Promise<UpdateResult> {
     return this.bookService.update(id, book);
   }
 
@@ -45,12 +45,12 @@ export class BookController {
   updateShelf(
     @Param('id') id: FindOneOptions<Book>,
     @Body() book: UpdateBookDto,
-  ): Promise<Book> {
+  ): Promise<UpdateResult> {
     return this.bookService.updateShelf(id, book);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id') id: FindOneOptions<Book>): Promise<void> {
+  deleteOne(@Param('id') id: FindOneOptions<Book>): Promise<Book> {
     return this.bookService.delete(id);
   }
 }
