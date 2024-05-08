@@ -57,12 +57,12 @@ export class BookService {
     return this.bookRepository.save(bookToUpdate);
   }
 
-  async delete(id: FindOneOptions<Book>): Promise<void> {
+  async delete(id: FindOneOptions<Book>): Promise<Book> {
     const bookToDelete = await this.findOne(id);
     if (!bookToDelete) {
       throw new NotFoundException('Book not found');
     }
 
-    await this.bookRepository.remove(bookToDelete);
+    return bookToDelete.remove();
   }
 }
