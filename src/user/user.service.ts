@@ -11,10 +11,9 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne(): Promise<User> {
-    const user: User = await this.userRepository.findOne({
-      relations: ['books'],
-    });
+  async findOne(id: number): Promise<User> {
+    // @ts-ignore
+    const user: User = await this.userRepository.findOne(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }

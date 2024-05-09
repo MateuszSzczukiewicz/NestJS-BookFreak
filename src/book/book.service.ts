@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -16,7 +16,8 @@ export class BookService {
     return this.bookRepository.save(book);
   }
 
-  async findOne(id: FindOneOptions<Book>): Promise<Book> {
+  async findOne(id: number): Promise<Book> {
+    // @ts-ignore
     const book: Book = await this.bookRepository.findOne(id);
     if (!book) {
       throw new NotFoundException('Book not found');
@@ -34,25 +35,19 @@ export class BookService {
     return books;
   }
 
-  async update(
-    id: FindOneOptions<Book>,
-    book: UpdateBookDto,
-  ): Promise<UpdateResult> {
+  async update(id: number, book: UpdateBookDto): Promise<UpdateResult> {
     await this.findOne(id);
     return this.bookRepository.update(id, book);
   }
 
-  async updateShelf(
-    id: FindOneOptions<Book>,
-    book: UpdateBookDto,
-  ): Promise<UpdateResult> {
+  async updateShelf(id: number, book: UpdateBookDto): Promise<UpdateResult> {
     const bookToUpdate: Book = await this.findOne(id);
     bookToUpdate.bookShelf = book.bookShelf;
 
     return this.bookRepository.update(id, bookToUpdate);
   }
 
-  async delete(id: FindOneOptions<Book>): Promise<Book> {
+  async delete(id: number): Promise<Book> {
     const bookToDelete: Book = await this.findOne(id);
     return this.bookRepository.remove(bookToDelete);
   }

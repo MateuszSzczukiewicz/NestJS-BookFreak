@@ -4,7 +4,7 @@ import { BookModule } from './book/book.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
-import { envValidation } from './config/envValidation.config';
+import { envValidationSchema } from './config/envValidation.config';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { envValidation } from './config/envValidation.config';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [`.env.${process.env.NODE_ENV}`],
-      validationSchema: envValidation,
+      validationSchema: envValidationSchema,
     }),
     BookModule,
     UserModule,

@@ -10,7 +10,7 @@ export const databaseConfig: TypeOrmModuleAsyncOptions = {
     username: configService.get<string>('POSTGRES_USER'),
     password: configService.get<string>('POSTGRES_PASSWORD'),
     database: configService.get<string>('POSTGRES_DATABASE'),
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    autoLoadEntities: true,
     synchronize: true,
     ssl: {
       rejectUnauthorized: false,
