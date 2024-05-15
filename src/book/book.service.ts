@@ -17,8 +17,10 @@ export class BookService {
   }
 
   async findOne(id: number): Promise<Book> {
-    // @ts-ignore
-    const book: Book = await this.bookRepository.findOne(id);
+    const book: Book = await this.bookRepository.findOne({
+      where: { id },
+    });
+
     if (!book) {
       throw new NotFoundException('Book not found');
     }
