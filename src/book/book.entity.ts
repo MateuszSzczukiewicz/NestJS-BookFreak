@@ -22,7 +22,11 @@ export class Book extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   bookImage: string | ArrayBuffer;
 
-  @Column({ type: 'enum', enum: BookShelvesEnum })
+  @Column({
+    type: 'enum',
+    enum: BookShelvesEnum,
+    default: BookShelvesEnum.READING,
+  })
   bookShelf: BookShelvesEnum;
 
   @ManyToOne(() => User, (user: User) => user.books, {

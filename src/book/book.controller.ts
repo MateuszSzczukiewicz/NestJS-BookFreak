@@ -9,10 +9,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { BookService } from './book.service';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { BookDto } from './dto/book.dto';
 import { Book } from './book.entity';
 import { UpdateResult } from 'typeorm';
+import { BookShelvesEnum } from './enums/book.enum';
 
 @Controller('books')
 export class BookController {
@@ -29,14 +29,14 @@ export class BookController {
   }
 
   @Post()
-  createOne(@Body() book: CreateBookDto): Promise<Book> {
+  createOne(@Body() book: BookDto): Promise<Book> {
     return this.bookService.createOne(book);
   }
 
   @Put(':id')
   updateOne(
     @Param('id') id: number,
-    @Body() book: UpdateBookDto,
+    @Body() book: BookDto,
   ): Promise<UpdateResult> {
     return this.bookService.update(id, book);
   }
@@ -44,9 +44,9 @@ export class BookController {
   @Patch(':id')
   updateShelf(
     @Param('id') id: number,
-    @Body() book: UpdateBookDto,
+    @Body('bookShelf') bookShelf: BookShelvesEnum,
   ): Promise<UpdateResult> {
-    return this.bookService.updateShelf(id, book);
+    return this.bookService.updateShelf(id, bookShelf);
   }
 
   @Delete(':id')
