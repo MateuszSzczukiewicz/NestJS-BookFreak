@@ -5,6 +5,9 @@ export class BookDto {
   @IsNumber()
   id: number;
 
+  @IsNumber()
+  userId: number;
+
   @IsString()
   title: string;
 

@@ -12,7 +12,8 @@ export class BookService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  async createOne(book: BookDto): Promise<Book> {
+  async createOne(book: BookDto, userId: number): Promise<Book> {
+    book.userId = userId;
     return this.bookRepository.save(book);
   }
 

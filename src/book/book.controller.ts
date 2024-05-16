@@ -28,9 +28,12 @@ export class BookController {
     return this.bookService.findOne(id);
   }
 
-  @Post()
-  createOne(@Body() book: BookDto): Promise<Book> {
-    return this.bookService.createOne(book);
+  @Post(':userId')
+  createOne(
+    @Param('userId') userId: number,
+    @Body() book: BookDto,
+  ): Promise<Book> {
+    return this.bookService.createOne(book, userId);
   }
 
   @Put(':id')
