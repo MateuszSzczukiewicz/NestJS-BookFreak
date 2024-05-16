@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { BookShelvesEnum } from './enums/book.enum';
+import { BookDto } from './dto/book.dto';
 
 @Injectable()
 export class BookService {
@@ -12,7 +12,7 @@ export class BookService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  async createOne(book: CreateBookDto): Promise<Book> {
+  async createOne(book: BookDto): Promise<Book> {
     return this.bookRepository.save(book);
   }
 
@@ -37,14 +37,17 @@ export class BookService {
     return books;
   }
 
-  async update(id: number, book: UpdateBookDto): Promise<UpdateResult> {
+  async update(id: number, book: BookDto): Promise<UpdateResult> {
     await this.findOne(id);
     return this.bookRepository.update(id, book);
   }
 
-  async updateShelf(id: number, book: UpdateBookDto): Promise<UpdateResult> {
+  async updateShelf(
+    id: number,
+    bookShelf: BookShelvesEnum,
+  ): Promise<UpdateResult> {
     const bookToUpdate: Book = await this.findOne(id);
-    bookToUpdate.bookShelf = book.bookShelf;
+    bookToUpdate.bookShelf = bookShelf;
 
     return this.bookRepository.update(id, bookToUpdate);
   }

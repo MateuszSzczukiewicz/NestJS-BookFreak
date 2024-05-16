@@ -24,7 +24,7 @@ export class TypeOrmConfig {
       password: configService.get<string>('POSTGRES_PASSWORD'),
       database: configService.get<string>('POSTGRES_DATABASE'),
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       ssl: {
         rejectUnauthorized: false,
         requestCert: true,
@@ -43,21 +43,21 @@ export const databaseConfig: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
 };
 
-// export const dataSourceConfig: DataSourceOptions = {
-//   type: 'postgres',
-//   host: process.env.POSTGRES_HOST,
-//   port: parseInt(process.env.POSTGRES_PORT, 10),
-//   username: process.env.POSTGRES_USER,
-//   password: process.env.POSTGRES_PASSWORD,
-//   database: process.env.POSTGRES_DATABASE,
-//   synchronize: false,
-//   ssl: {
-//     rejectUnauthorized: false,
-//     requestCert: true,
-//   },
-//   migrationsRun: false,
-//   entities: ['dist/**/*.entity{.ts,.js}'],
-//   migrations: ['dist/database/**/*.entity{.ts,.js}'],
-// };
-//
-// export default new DataSource(dataSourceConfig);
+export const dataSourceConfig: DataSourceOptions = {
+  type: 'postgres',
+  host: process.env.POSTGRES_HOST,
+  port: parseInt(process.env.POSTGRES_PORT, 10),
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+  synchronize: false,
+  ssl: {
+    rejectUnauthorized: false,
+    requestCert: true,
+  },
+  migrationsRun: false,
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/database/**/*.entity{.ts,.js}'],
+};
+
+export default new DataSource(dataSourceConfig);

@@ -34,6 +34,7 @@ export class CreateBookTable1715287428100 implements MigrationInterface {
           {
             name: 'bookShelf',
             type: 'enum',
+            default: 'Reading',
             enum: ['Reading', 'Read', 'WantToRead'],
           },
           {
