@@ -11,9 +11,19 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async findAll(): Promise<User[]> {
+    const users: User[] = await this.userRepository.find();
+    if (!users.length) {
+      throw new NotFoundException('Books not found');
+    }
+
+    return users;
+  }
+
   async findOne(id: number): Promise<User> {
-    // @ts-ignore
-    const user: User = await this.userRepository.findOne(id);
+    const user: User = await this.userRepository.findOne({
+      where: { id },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }
