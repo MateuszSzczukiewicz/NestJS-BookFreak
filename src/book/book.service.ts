@@ -2,59 +2,98 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
-import { BookShelvesEnum } from './enums/book.enum';
 import { BookDto } from './dto/book.dto';
+import { BookShelvesEnum } from './enums/book.enum';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class BookService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async createOne(book: BookDto, userId: number): Promise<Book> {
-    book.userId = userId;
-    return this.bookRepository.save(book);
+  async findAll(userId: number): Promise<Book[]> {
+    return this.bookRepository.find({ where: { user: { id: userId } } });
   }
 
-  async findOne(id: number): Promise<Book> {
+  async findOne(userId: number, id: number): Promise<Book> {
     const book: Book = await this.bookRepository.findOne({
-      where: { id },
+      where: { id, user: { id: userId } },
     });
-
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException(`Book ${id} not found for user ${userId}`);
     }
-
     return book;
   }
 
-  async findAll(): Promise<Book[]> {
-    const books: Book[] = await this.bookRepository.find();
-    if (!books.length) {
-      throw new NotFoundException('Books not found');
+  async createOne(bookDto: BookDto, userId: number): Promise<Book> {
+    const user: User = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
     }
 
-    return books;
+    const book: Book = this.bookRepository.create({
+      ...bookDto,
+      user,
+    });
+    return this.bookRepository.save(book);
   }
 
-  async update(id: number, book: BookDto): Promise<UpdateResult> {
-    await this.findOne(id);
-    return this.bookRepository.update(id, book);
+  async updateOne(
+    userId: number,
+    bookId: number,
+    bookDto: BookDto,
+  ): Promise<UpdateResult> {
+    const book: Book = await this.bookRepository.findOne({
+      where: { id: bookId, user: { id: userId } },
+    });
+    if (!book) {
+      throw new NotFoundException(
+        `Book ${bookId} not found for user ${userId}`,
+      );
+    }
+
+    return this.bookRepository.update(
+      { id: bookId, user: { id: userId } },
+      bookDto,
+    );
   }
 
   async updateShelf(
-    id: number,
+    userId: number,
+    bookId: number,
     bookShelf: BookShelvesEnum,
   ): Promise<UpdateResult> {
-    const bookToUpdate: Book = await this.findOne(id);
-    bookToUpdate.bookShelf = bookShelf;
+    const book: Book = await this.bookRepository.findOne({
+      where: { id: bookId, user: { id: userId } },
+    });
+    if (!book) {
+      throw new NotFoundException(
+        `Book ${bookId} not found for user ${userId}`,
+      );
+    }
 
-    return this.bookRepository.update(id, bookToUpdate);
+    return this.bookRepository.update(
+      { id: bookId, user: { id: userId } },
+      { bookShelf },
+    );
   }
 
-  async delete(id: number): Promise<Book> {
-    const bookToDelete: Book = await this.findOne(id);
-    return this.bookRepository.remove(bookToDelete);
+  async deleteOne(userId: number, bookId: number): Promise<void> {
+    const book: Book = await this.bookRepository.findOne({
+      where: { id: bookId, user: { id: userId } },
+    });
+    if (!book) {
+      throw new NotFoundException(
+        `Book ${bookId} not found for user ${userId}`,
+      );
+    }
+
+    await this.bookRepository.remove(book);
   }
 }

@@ -1,13 +1,7 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BookShelvesEnum } from '../enums/book.enum';
 
 export class BookDto {
-  @IsNumber()
-  id: number;
-
-  @IsNumber()
-  userId: number;
-
   @IsString()
   title: string;
 
@@ -16,9 +10,9 @@ export class BookDto {
 
   @IsString()
   @IsOptional()
-  bookImage: string | ArrayBuffer | null;
+  bookImage?: string | ArrayBuffer;
 
+  @IsNotEmpty()
   @IsEnum(BookShelvesEnum)
-  @IsOptional()
   bookShelf: BookShelvesEnum;
 }

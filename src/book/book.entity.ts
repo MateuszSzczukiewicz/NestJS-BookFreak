@@ -13,14 +13,14 @@ export class Book extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', length: 255 })
   author: string;
 
   @Column({ type: 'varchar', nullable: true })
-  bookImage: string | ArrayBuffer;
+  bookImage?: string | ArrayBuffer;
 
   @Column({
     type: 'enum',
@@ -29,8 +29,6 @@ export class Book extends BaseEntity {
   })
   bookShelf: BookShelvesEnum;
 
-  @ManyToOne(() => User, (user: User) => user.books, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => User, (user: User) => user.books, { onDelete: 'CASCADE' })
   user: User;
 }

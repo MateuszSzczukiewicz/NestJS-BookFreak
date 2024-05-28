@@ -14,46 +14,54 @@ import { Book } from './book.entity';
 import { UpdateResult } from 'typeorm';
 import { BookShelvesEnum } from './enums/book.enum';
 
-@Controller('books')
+@Controller('profile/:userId/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  findAll(): Promise<Book[]> {
-    return this.bookService.findAll();
+  async findAll(@Param('userId') userId: number): Promise<Book[]> {
+    return this.bookService.findAll(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Book> {
-    return this.bookService.findOne(id);
+  findOne(
+    @Param('userId') userId: number,
+    @Param('id') id: number,
+  ): Promise<Book> {
+    return this.bookService.findOne(userId, id);
   }
 
-  @Post(':userId')
+  @Post()
   createOne(
     @Param('userId') userId: number,
-    @Body() book: BookDto,
+    @Body() createBookDto: BookDto,
   ): Promise<Book> {
-    return this.bookService.createOne(book, userId);
+    return this.bookService.createOne(createBookDto, userId);
   }
 
   @Put(':id')
-  updateOne(
+  async updateOne(
+    @Param('userId') userId: number,
     @Param('id') id: number,
-    @Body() book: BookDto,
+    @Body() bookDto: BookDto,
   ): Promise<UpdateResult> {
-    return this.bookService.update(id, book);
+    return this.bookService.updateOne(userId, id, bookDto);
   }
 
   @Patch(':id')
   updateShelf(
+    @Param('userId') userId: number,
     @Param('id') id: number,
     @Body('bookShelf') bookShelf: BookShelvesEnum,
   ): Promise<UpdateResult> {
-    return this.bookService.updateShelf(id, bookShelf);
+    return this.bookService.updateShelf(userId, id, bookShelf);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id') id: number): Promise<Book> {
-    return this.bookService.delete(id);
+  async deleteOne(
+    @Param('userId') userId: number,
+    @Param('id') id: number,
+  ): Promise<void> {
+    await this.bookService.deleteOne(userId, id);
   }
 }
