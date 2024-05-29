@@ -7,7 +7,9 @@ import { User } from '../user/user.entity';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async register(user: CreateUserDto): Promise<User> {
+  async register(
+    user: Pick<CreateUserDto, 'email' | 'password'>,
+  ): Promise<User> {
     return this.userService.createOne(user);
   }
 }
