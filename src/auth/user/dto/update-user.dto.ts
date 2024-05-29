@@ -5,7 +5,7 @@ export class UpdateUserDto {
   id: number;
 
   @IsString()
-  username: string;
+  email: string;
 
   @IsString()
   password: string;
