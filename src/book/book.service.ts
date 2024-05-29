@@ -4,7 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Book } from './book.entity';
 import { BookDto } from './dto/book.dto';
 import { BookShelvesEnum } from './enums/book.enum';
-import { User } from '../user/user.entity';
+import { User } from '../auth/user/user.entity';
 
 @Injectable()
 export class BookService {

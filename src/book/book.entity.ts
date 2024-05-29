@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
+import { User } from '../auth/user/user.entity';
 import { BookShelvesEnum } from './enums/book.enum';
 
 @Entity()

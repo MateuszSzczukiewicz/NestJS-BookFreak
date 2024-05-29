@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { BookShelvesEnum } from '../enums/book.enum';
 
 export class BookDto {
@@ -8,11 +8,11 @@ export class BookDto {
   @IsString()
   author: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   bookImage?: string | ArrayBuffer;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(BookShelvesEnum)
   bookShelf: BookShelvesEnum;
 }

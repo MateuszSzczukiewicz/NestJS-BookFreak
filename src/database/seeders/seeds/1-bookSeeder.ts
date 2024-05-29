@@ -1,7 +1,7 @@
 import { Factory, Seeder } from 'typeorm-seeding';
 import { DataSource } from 'typeorm';
 import { Book } from '../../../book/book.entity';
-import { User } from '../../../user/user.entity';
+import { User } from '../../../auth/user/user.entity';
 import { initializeSeeds } from '../initializeSeeds';
 
 initializeSeeds();

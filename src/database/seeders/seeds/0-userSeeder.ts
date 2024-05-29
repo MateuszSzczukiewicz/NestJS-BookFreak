@@ -1,5 +1,5 @@
 import { Factory, Seeder } from 'typeorm-seeding';
-import { User } from '../../../user/user.entity';
+import { User } from '../../../auth/user/user.entity';
 import { initializeSeeds } from '../initializeSeeds';
 
 initializeSeeds();
