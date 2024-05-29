@@ -4,14 +4,16 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/user.entity';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { ConfigService } from '@nestjs/config';
-import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
-  private readonly configService: ConfigService;
-  private readonly jwtService: JwtService;
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async register(
     user: Pick<CreateUserDto, 'email' | 'password'>,

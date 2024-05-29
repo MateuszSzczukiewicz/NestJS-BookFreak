@@ -10,7 +10,6 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/user.entity';
-import { ConfigService } from '@nestjs/config';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 
 @Controller('auth')

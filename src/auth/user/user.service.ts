@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -13,7 +13,7 @@ export class UserService {
   ) {}
 
   async findOne(condition): Promise<User> {
-    return this.userRepository.findOne(condition);
+    return this.userRepository.findOne({ where: condition });
   }
 
   async createOne(
