@@ -22,7 +22,7 @@ export class AuthController {
     @Res() res,
   ): Promise<User> {
     const user: User = await this.authService.register({ email, password });
-    this.authService.setAuthTokens(res, {
+    await this.authService.setAuthTokens(res, {
       user_id: user.id,
     });
 
@@ -33,7 +33,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() { email, password }: LoginUserDto, @Res() res) {
     const user: User = await this.authService.login({ email, password });
-    this.authService.setAuthTokens(res, {
+    await this.authService.setAuthTokens(res, {
       user_id: user.id,
     });
 
